@@ -1,5 +1,5 @@
 - name: Configure EC2 as Jenkins Slave
-  hosts: all
+  hosts: jenkins_slave
   become: yes
 
   tasks:
