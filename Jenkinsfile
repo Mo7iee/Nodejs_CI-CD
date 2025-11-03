@@ -19,9 +19,9 @@ pipeline {
         stage("CD - Run Application") {
             steps {
                 script {
-                    sh 'docker pull mo7iiee/devops:latest'
-                    sh 'docker rm -f node-app || true'
-                    sh 'docker run --name node-app -p 3000:3000 -d mo7iiee/devops:latest'
+                    sh 'docker-compose down || true'
+                    sh 'docker pull mo7iiee/devops:latest || true'
+                    sh 'docker-compose up -d --build'
                 }
             }
         }
