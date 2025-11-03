@@ -34,6 +34,14 @@
         name: jenkins
         groups: docker
         append: yes
+        
+    - name: Create Jenkins directory
+      file:
+        path: /home/ubuntu/jenkins
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
 
     - name: Restart Docker service
       service:
