@@ -9,3 +9,8 @@ ansible_ssh_common_args='-o ProxyCommand="ssh -i /home/mo7iee/.ssh/key.pem -W %h
 
 
 # ssh -i /var/jenkins_home/.ssh/key.pem -N -L 2222:192.168.3.4:22 -o "StrictHostKeyChecking=no" ubuntu@44.211.232.232 &
+
+# ssh -i /var/jenkins_home/.ssh/key.pem \
+#   -N -f -L 2222:192.168.3.196:22 \
+#   -o "StrictHostKeyChecking=no" \
+#   ubuntu@3.208.93.42
