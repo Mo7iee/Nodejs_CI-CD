@@ -5,5 +5,6 @@
 This project sets up a complete CI/CD pipeline for a Node.js app on AWS. It features a private EC2 instance configured as a Jenkins slave using Ansible, with SSH tunneling through a bastion host to securely run builds in private subnets. Docker handles containerization, The CI stage builds and pushes the Docker image to Dockerhub, and CD stage pulls the image and deploys it on Auto Scaling Group. Finally, Slack notifications are integrated into the Jenkins pipeline to provide real-time updates on build, push, and deployment events.
 
 -Infrastructure Repo: https://github.com/Mo7iee/IaC-Terraform
+-Node.js App Repo: https://github.com/Mo7iee/eCommerceBackend-Nodejs
 
 
