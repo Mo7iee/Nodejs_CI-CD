@@ -34,7 +34,7 @@
         name: jenkins
         groups: docker
         append: yes
-        
+
     - name: Create Jenkins directory
       file:
         path: /home/ubuntu/jenkins
@@ -58,3 +58,6 @@
       command: docker-compose --version
       register: compose_version
       changed_when: false
+
+
+    
