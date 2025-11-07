@@ -12,7 +12,7 @@ services:
       - mongo-data:/data/db
 
   nodeapp:
-    build: .
+    image: mo7iee/devops:latest  
     container_name: nodeapp
     ports:
       - "3001:3001"

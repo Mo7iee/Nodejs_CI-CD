@@ -30,7 +30,7 @@ pipeline {
 
                     sh 'docker-compose down || true'
                     sh 'docker pull mo7iiee/devops:latest || true'
-                    sh 'docker-compose up -d --build'
+                    sh 'docker-compose up -d'
 
                     slackSend(channel: SLACK_CHANNEL, message: "🎉 Deployment completed successfully!")
                 }
