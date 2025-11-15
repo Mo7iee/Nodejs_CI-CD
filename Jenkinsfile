@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SLACK_CHANNEL = '#test'
-        IMAGE_NAME = 'mo7iee/devops:latest'
+        IMAGE_NAME = 'mo7iiee/devops:latest'
     }
 
     stages {
