@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         SLACK_CHANNEL = '#test'
+        IMAGE_NAME = 'mo7iee/devops:latest'
     }
 
     stages {
@@ -10,12 +11,15 @@ pipeline {
         stage("CI - Build & Push Docker Image") {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Dockerhub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                    withCredentials([usernamePassword(credentialsId: 'Dockerhub', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         slackSend(channel: SLACK_CHANNEL, message: "🛠️ CI started: Building Docker Image...")
-                        
-                        sh 'docker build -t mo7iiee/devops:latest .'
+
+                        // Build the Docker image locally
+                        sh "docker build -t $IMAGE_NAME ."
+
+                        // Login to Docker Hub and push the image
                         sh "echo $PASS | docker login -u $USER --password-stdin"
-                        sh 'docker push mo7iiee/devops:latest'
+                        sh "docker push $IMAGE_NAME"
 
                         slackSend(channel: SLACK_CHANNEL, message: "✅ Docker Image pushed to DockerHub!")
                     }
@@ -23,14 +27,13 @@ pipeline {
             }
         }
 
-        stage("CD - Run Application") {
+        stage("CD - Deploy with Docker Compose") {
             steps {
                 script {
                     slackSend(channel: SLACK_CHANNEL, message: "🚀 Deployment started...")
 
                     sh 'docker-compose down || true'
-                    sh 'docker pull mo7iiee/devops:latest || true'
-                    sh 'docker-compose up -d'
+                    sh 'docker-compose up -d --pull always --remove-orphans'
 
                     slackSend(channel: SLACK_CHANNEL, message: "🎉 Deployment completed successfully!")
                 }
