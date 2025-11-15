@@ -1,16 +1,24 @@
 [jenkins_slave]
-jenkins-agent-1 ansible_host=192.168.3.196 ansible_user=ubuntu
+jenkins-agent-1 ansible_host=192.168.3.28 ansible_user=ubuntu
 
 [jenkins_slave:vars]
 ansible_ssh_private_key_file=/home/mo7iee/.ssh/key.pem
-ansible_ssh_common_args='-o ProxyCommand="ssh -i /home/mo7iee/.ssh/key.pem -W %h:%p -q ubuntu@3.208.93.42"'
+ansible_ssh_common_args='-o ProxyCommand="ssh -i /home/mo7iee/.ssh/key.pem -W %h:%p -q ubuntu@3.238.218.149"'
 
 
 
 
-# ssh -i /var/jenkins_home/.ssh/key.pem -N -L 2222:192.168.3.4:22 -o "StrictHostKeyChecking=no" ubuntu@44.211.232.232 &
 
 # ssh -i /var/jenkins_home/.ssh/key.pem \
-#   -N -f -L 2222:192.168.3.196:22 \
+#   -N -f -L 2222:192.168.3.28:22 \
 #   -o "StrictHostKeyChecking=no" \
-#   ubuntu@3.208.93.42
+#   ubuntu@3.238.218.149
+
+# ssh -i ~/.ssh/key.pem \
+#     -N -f -L 2222:192.168.3.28:22 \
+#     -o "StrictHostKeyChecking=no" \
+#     ubuntu@3.238.218.149
+
+# ssh -i ~/.ssh/key.pem \
+#     -o "ProxyCommand=ssh -i ~/.ssh/key.pem -W %h:%p ubuntu@3.238.218.149" \
+#     ubuntu@192.168.3.28
