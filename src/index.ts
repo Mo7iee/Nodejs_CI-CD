@@ -11,7 +11,7 @@ const port = 3001;
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello from Mohie!!!!!!!!!!!!!!!!!!!!!");
+  res.send("Hello from Mohie!!");
 });
 
 app.use('/user',userRoute)
