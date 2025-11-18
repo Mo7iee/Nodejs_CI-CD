@@ -1,5 +1,5 @@
 # Deploying a node.js app on AWS using Jenkins&Ansible
-<img width="1162" height="918" alt="Jenkinssss drawio" src="https://github.com/user-attachments/assets/0027edb6-b009-4b42-a301-60fa6b899150" />
+<img width="1162" height="918" alt="Finalllllllllll drawio" src="https://github.com/user-attachments/assets/6d483663-327e-48e4-897c-f5b6f2032c70" />
 
 
 ## Project Description
@@ -82,6 +82,7 @@ Create a new node and name it "ec2", choose "Launch agents via SSH" as a launch 
 
 ### 8. Access the deployed Node.js app via the Application Load Balancer URL.
 ![c85ab9c5-d95d-4e41-8ab7-84ad7aea080f](https://github.com/user-attachments/assets/f32c00ec-5da7-4663-8507-616ab16db50e)
+
 
 
 
