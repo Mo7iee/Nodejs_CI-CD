@@ -20,6 +20,8 @@ services:
       - mongo
     environment:
       - MONGO_URI=mongodb://mongo:27017/mydb
+      - REDIS_HOST=clustercfg.rediscache.x6ij9i.use1.cache.amazonaws.com
+      - REDIS_PORT=6379
     command: ["node", "dist/index.js"]
 
 volumes:
