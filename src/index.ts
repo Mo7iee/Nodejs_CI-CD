@@ -4,8 +4,7 @@ import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
 import { seedProducts } from "./services/productService.js";
-import { createClient } from "redis";
-import type { RedisClientType } from "redis";
+import { createCluster } from "redis";
 
 const app = express();
 const port = 3001;
@@ -46,7 +45,7 @@ mongoose
   })
   .catch((err: unknown) => console.error("MongoDB connection error:", err));
 
-// Redis client (cluster mode)
+// Redis Cluster client
 const redisHost = process.env.REDIS_HOST;
 const redisPort = Number(process.env.REDIS_PORT) || 6379;
 
@@ -54,32 +53,29 @@ if (!redisHost) {
   throw new Error("REDIS_HOST not defined");
 }
 
-const client: RedisClientType = createClient({
-  socket: {
-    host: redisHost,
-    port: redisPort,
-  },
+const redisCluster = createCluster({
+  rootNodes: [{ url: `redis://${redisHost}:${redisPort}` }],
 });
 
-client.on("error", (err: Error) => {
-  console.error("Redis error:", err);
+redisCluster.on("error", (err: Error) => {
+  console.error("Redis Cluster error:", err);
 });
 
 (async () => {
   try {
-    await client.connect();
-    console.log("Redis connected");
+    await redisCluster.connect();
+    console.log("Redis Cluster connected");
   } catch (err: unknown) {
-    console.error("Redis connection failed:", err);
+    console.error("Redis Cluster connection failed:", err);
   }
 })();
 
 // Test Redis endpoint
 app.get("/redis", async (_req, res) => {
   try {
-    const rep = await client.set("foo", "bar");
+    const rep = await redisCluster.set("foo", "bar");
     console.log("Redis SET response:", rep);
-    res.send("Redis is successfully connected");
+    res.send("Redis cluster is successfully connected");
   } catch (error: unknown) {
     console.error("Redis operation failed:", error);
     res.status(500).send("Redis connection failed");
