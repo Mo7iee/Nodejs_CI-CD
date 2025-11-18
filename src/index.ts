@@ -4,6 +4,7 @@ import userRoute from "./routes/userRoute.js";
 import productRoute from "./routes/productRoute.js";
 import { seedProducts } from "./services/productService.js";
 import cartRoute from "./routes/cartRoute.js";
+import { createClient, RedisClientType } from "redis";
 
 const app = express();
 const port = 3001;
@@ -14,12 +15,11 @@ app.get("/", (req, res) => {
   res.send("Hello from Mohie!!");
 });
 
-app.use('/user',userRoute)
-app.use('/products',productRoute)
-app.use('/cart',cartRoute)
+app.use('/user', userRoute);
+app.use('/products', productRoute);
+app.use('/cart', cartRoute);
 
 const mongoUri = process.env.MONGO_URI;
-
 if (!mongoUri) {
   throw new Error("MONGO_URI not defined");
 }
@@ -32,7 +32,7 @@ mongoose
     try {
       await seedProducts();
       console.log("Products seeded");
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Seeding failed:", err);
     }
 
@@ -40,28 +40,31 @@ mongoose
       console.log(`Server is running on port ${port}`);
     });
   })
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err: unknown) => console.error("MongoDB connection error:", err));
 
-  const redis = require('redis');
-const client = redis.createClient({
-    host: process.env.REDIS_HOSTNAME,
-    port: process.env.REDIS_PORT,
+// Redis setup
+const client: RedisClientType = createClient({
+  socket: {
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT) || 6379,
+  },
 });
 
-client.on('error', err => {
-    console.log('Error ' + err);
+client.on("error", (err: Error) => {
+  console.error("Redis error:", err);
 });
 
-app.get('/redis', (req, res) => {
+(async () => {
+  await client.connect();
+})();
 
-  client.set('foo','bar', (error, rep)=> {                
-    if(error){     
-console.log(error);
-      res.send("redis connection failed");                             
-      return;                
-  }                 
-  if(rep){                          //JSON objects need to be parsed after reading from redis, since it is stringified before being stored into cache                      
- console.log(rep);
-  res.send("redis is successfuly connected");                 
- }}) 
-  })
+app.get("/redis", async (req, res) => {
+  try {
+    const rep = await client.set("foo", "bar"); 
+    console.log(rep);
+    res.send("Redis is successfully connected");
+  } catch (error: unknown) {
+    console.error("Redis connection failed:", error);
+    res.send("Redis connection failed");
+  }
+});
