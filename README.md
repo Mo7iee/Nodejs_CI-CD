@@ -3,7 +3,7 @@
 
 
 ## Project Description
-This projects sets up a complete CI/CD pipeline for a Node.js app on AWS. The application integrates with MongoDB for persistent storage and Redis, provisioned via AWS ElastiCache, for secure in-memory caching. The project architecture features a private EC2 instance configured as a Jenkins slave using an Ansible script, with SSH tunneling through a bastion host to securely run builds in private subnets. Docker handles containerization, The CI stage builds and pushes the Docker image to Dockerhub, and CD stage pulls the image and deploys it on the EC2. The application can be externally accessed by via the Application Load Balancer URL. Finally, Slack notifications are integrated into the Jenkins pipeline to provide real-time updates on build, push, and deployment events. 
+This projects sets up a complete CI/CD pipeline for a Node.js app on AWS. The application integrates with MongoDB for persistent storage and Redis, provisioned via AWS ElastiCache, for secure in-memory caching. The project architecture features a private EC2 instance configured as a Jenkins slave using an Ansible script, with SSH tunneling through a bastion host to securely run builds in private subnets. Docker handles containerization, The CI stage builds and pushes the Docker image to Dockerhub, and CD stage pulls the image and deploys it on the EC2. The application can be externally accessed via the Application Load Balancer URL. Finally, Slack notifications are integrated into the Jenkins pipeline to provide real-time updates on build, push, and deployment events. 
 
 ---
 ## Repositories
@@ -18,7 +18,7 @@ https://github.com/Mo7iee/eCommerceBackend-Nodejs
 ```bash
 git clone https://github.com/Mo7iee/Nodejs_CI-CD.git
 ```
-### 2. Run Jenkins container with Docker CLI and Docker socket mounted
+### 2. Run a Jenkins container with Docker CLI and Docker socket mounted
 ```bash
 docker run -d --name jenkins -p 8080:8080 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins:lts
 ```
@@ -58,8 +58,7 @@ Create a tunnel to the Bastion:
     -o "StrictHostKeyChecking=no" \
     ubuntu@<bastion-public-ip>
 ```
-This forwards the local port 2222 in the Jenkins container to port 22 on the Jenkins Slave through the tunnel
-You can now SSH directly to the Jenkins Slave from inside the Jenkins container:
+This forwards the local port 2222 in the Jenkins container to port 22 on the Jenkins Slave through the tunnel. You can now SSH directly into the Jenkins Slave from inside the Jenkins container:
 ```bash
 ssh -i /var/jenkins_home/key.pem -p 2222 ubuntu@localhost
 ```
@@ -82,6 +81,7 @@ Create a new node and name it "ec2", choose "Launch agents via SSH" as a launch 
 
 ### 8. Access the deployed Node.js app via the Application Load Balancer URL.
 ![c85ab9c5-d95d-4e41-8ab7-84ad7aea080f](https://github.com/user-attachments/assets/f32c00ec-5da7-4663-8507-616ab16db50e)
+
 
 
 
