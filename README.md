@@ -1,4 +1,4 @@
-# Deploying a node.js app on AWS using Jenkins&Ansible
+# Deploying a Node.js app on AWS using Jenkins&Ansible
 <img width="1162" height="918" alt="Finalllllllllll drawio" src="https://github.com/user-attachments/assets/6d483663-327e-48e4-897c-f5b6f2032c70" />
 
 
@@ -6,19 +6,23 @@
 This projects sets up a complete CI/CD pipeline for a Node.js app on AWS. The application integrates with MongoDB for persistent storage and Redis, provisioned via AWS ElastiCache, for secure in-memory caching. The project architecture features a private EC2 instance configured as a Jenkins slave using an Ansible script, with SSH tunneling through a bastion host to securely run builds in private subnets. Docker handles containerization, The CI stage builds and pushes the Docker image to Dockerhub, and CD stage pulls the image and deploys it on the EC2. The application can be externally accessed via the Application Load Balancer URL. Finally, Slack notifications are integrated into the Jenkins pipeline to provide real-time updates on build, push, and deployment events. 
 
 ---
-## Repositories
-**Infrastructure Repo:** <br>
-https://github.com/Mo7iee/IaC-Terraform <br>
-**Node.js App Repo:** <br>
-https://github.com/Mo7iee/eCommerceBackend-Nodejs
+## Infrastructure Overview
+- **VPC** with both public and private subnets across multiple AZs  
+- **Internet Gateway (IGW)** for public internet access  
+- **NAT Gateway** for private subnets outbound access  
+- **Bastion Host (EC2)** for secure SSH access into private resources
+- **Jenkins Slave (EC2)** to run CI/CD pipeline tasks
+- **ElastiCache (Redis)** for secure in-memory caching
+- **Application Load Balancer (ALB)** to expose the app for users
 
 ---
+
 ## Deployment Steps
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/Mo7iee/Nodejs_CI-CD.git
 ```
-### 2. Run a Jenkins container with Docker CLI and Docker socket mounted
+### 2. Run a Jenkins container with Docker CLI installed and Docker socket mounted
 ```bash
 docker run -d --name jenkins -p 8080:8080 -v jenkins_home:/var/jenkins_home -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker jenkins/jenkins:lts
 ```
@@ -31,7 +35,7 @@ Retrieve the admin password from inside the container:
 docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
 ```
 Create your admin user.
-### 3. Configure the private ec2 named 'Jenkins-Slave' as a Jenkins agent by running the ansible script
+### 3. Configure the private EC2 named 'Jenkins-Slave' as a Jenkins agent by running the ansible script
 The ansible script installs jdk, Docker, and creates a Jenkins directory. 
 ```bash
 cd ansible
@@ -73,14 +77,15 @@ Create a new node and name it "ec2", choose "Launch agents via SSH" as a launch 
 
 ![c33588e5-601d-4c3a-87e6-1bb1e765eb31](https://github.com/user-attachments/assets/6f0ab5d3-00da-42ed-826b-019f70b9c011)
 
-### 6. Run Jenkins Pipeline and ensure that Slack plugin is installed
+### 6. Run the Pipeline and ensure that Slack plugin is installed
 ![6a37ba8a-3f1f-4bfa-9a7f-7422cba006d0](https://github.com/user-attachments/assets/7dca8b87-b517-45f6-924b-68c719ed9340)
 
-### 7. Verify Pipeline stages on Slack
+### 7. Verify Pipeline Stages on Slack
 ![2ad3aabc-d23d-4b60-916d-d7af1e8bf804](https://github.com/user-attachments/assets/e3bf8548-f617-4161-8bde-c40263ae516e)
 
 ### 8. Access the deployed Node.js app via the Application Load Balancer URL.
 ![c85ab9c5-d95d-4e41-8ab7-84ad7aea080f](https://github.com/user-attachments/assets/f32c00ec-5da7-4663-8507-616ab16db50e)
+
 
 
 
